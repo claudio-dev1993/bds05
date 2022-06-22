@@ -36,9 +36,8 @@ public class UserController {
     }
 
     @GetMapping(value = "/profile")
-    ResponseEntity<UserDTO> findByProfile() {
-        Long id = authService.authenticated().getId();
-        UserDTO dto = service.findById(id);
+    ResponseEntity<UserDTO> findUserLogged() {
+        UserDTO dto = authService.authenticated();
         return ResponseEntity.ok().body(dto);
     }
 

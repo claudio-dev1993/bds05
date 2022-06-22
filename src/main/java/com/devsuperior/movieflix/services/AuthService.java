@@ -5,7 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.devsuperior.movieflix.entities.User;
+import com.devsuperior.movieflix.dto.UserDTO;
 import com.devsuperior.movieflix.repositories.UserRepository;
 import com.devsuperior.movieflix.services.exceptions.ForbiddenAccessException;
 import com.devsuperior.movieflix.services.exceptions.UnauthorizedAccessException;
@@ -17,17 +17,17 @@ public class AuthService {
     private UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public User authenticated(){
+    public UserDTO authenticated(){
         try {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
-             return userRepository.findByEmail(username);
+             return new UserDTO(userRepository.findByEmail(username));
         } catch (Exception e) {
-            throw new UnauthorizedAccessException("Invalid user!");
+            throw new UnauthorizedAccessException("User is not logged in!");
         }
     }
 
     public void validateSelfOrAdmin(Long userId){
-        User user = authenticated();
+        UserDTO user = authenticated();
         if(!user.getId().equals(userId) && !user.hasRole("ROLE_MEMBER")){
             throw new ForbiddenAccessException("Access denied!");
         }
