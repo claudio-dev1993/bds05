@@ -22,7 +22,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	@Autowired
 	private JwtTokenStore tokenStore;
 
-	private static final String[] PUBLIC = { "/oauth/token", "/h2-console/**" };
+	private static final String[] PUBLIC = {"/oauth/token", "/h2-console/**" };
 
     private static final String[] VISITOR_OR_MEMBER = { "/users/profile"};
 
@@ -44,10 +44,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		http.authorizeRequests()
 		.antMatchers(PUBLIC)
 		.permitAll()
-        .antMatchers(HttpMethod.GET, VISITOR_OR_MEMBER)
-        .permitAll()
-		.anyRequest()
-		.authenticated();
+		.antMatchers(HttpMethod.GET, VISITOR_OR_MEMBER )
+		.permitAll()
+		.anyRequest().authenticated();
+		
 	}
 
 }

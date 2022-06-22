@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.devsuperior.movieflix.services.exceptions.DatabaseException;
+import com.devsuperior.movieflix.services.exceptions.ForbiddenAccessException;
 import com.devsuperior.movieflix.services.exceptions.ResourceNotFoundException;
+import com.devsuperior.movieflix.services.exceptions.UnauthorizedAccessException;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -37,5 +39,17 @@ public class ControllerExceptionHandler {
 		err.setMessage(e.getMessage());
 		err.setPath(request.getRequestURI());
 		return ResponseEntity.status(status).body(err);
+	}
+
+	@ExceptionHandler(ForbiddenAccessException.class)
+	public ResponseEntity<OauthCustomError> forbidden (ForbiddenAccessException e, HttpServletRequest request){
+		OauthCustomError err = new OauthCustomError("Forbidden", e.getMessage());
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
+	}
+
+	@ExceptionHandler(UnauthorizedAccessException.class)
+	public ResponseEntity<OauthCustomError> unauthorized (UnauthorizedAccessException e, HttpServletRequest request){
+		OauthCustomError err = new OauthCustomError("Unauthorized", e.getMessage());
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
 	}
 }
